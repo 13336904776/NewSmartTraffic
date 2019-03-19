@@ -17,12 +17,13 @@ import com.example.mrzhang.smarttraffic.fragment.dummy.DummyContent.DummyItem;
 import java.util.List;
 
 /**
+ * 公交查询
  * A fragment representing a list of Items.
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class BusInquiryFragment extends Fragment {
+public class BusInquiryFragment extends BaseFragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -82,8 +83,8 @@ public class BusInquiryFragment extends Fragment {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnListFragmentInteractionListener");
         }
     }
 

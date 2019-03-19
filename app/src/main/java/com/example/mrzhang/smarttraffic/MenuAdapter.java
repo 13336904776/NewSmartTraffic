@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mrzhang.smarttraffic.bean.MenuBean;
@@ -19,6 +20,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>{
 
     Context mContext;
     List<MenuBean> mlist;
+    MenuClickListen menuClickListen;
+
+    public MenuClickListen getMenuClickListen() {
+        return menuClickListen;
+    }
+
+    public void setMenuClickListen(MenuClickListen menuClickListen) {
+        this.menuClickListen = menuClickListen;
+    }
 
     public MenuAdapter(Context mContext, List<MenuBean> mlist) {
         this.mContext = mContext;
@@ -33,9 +43,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.imageView.setBackgroundResource(mlist.get(position).getIv());
         holder.textView.setText(mlist.get(position).getTitle());
+        holder.item_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuClickListen.Click(position);
+            }
+        });
     }
 
     @Override
@@ -46,11 +62,17 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder>{
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView ;
+        LinearLayout item_menu ;
         public MyViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.menu_iv);
             textView = itemView.findViewById(R.id.menu_tv);
+            item_menu = itemView.findViewById(R.id.item_menu);
         }
+    }
+
+    public interface MenuClickListen{
+        void Click(int postion);
     }
 
 }

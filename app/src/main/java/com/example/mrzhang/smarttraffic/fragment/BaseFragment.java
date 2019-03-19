@@ -1,10 +1,11 @@
 package com.example.mrzhang.smarttraffic.fragment;
 
-import android.app.Fragment;
+
+import android.support.v4.app.Fragment;
 
 /**
  *
  */
-public class BaseFragment extends Fragment{
+public class BaseFragment extends Fragment {
 
 }
