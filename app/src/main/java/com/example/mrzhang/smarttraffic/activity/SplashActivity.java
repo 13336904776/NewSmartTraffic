@@ -3,6 +3,7 @@ package com.example.mrzhang.smarttraffic.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.example.mrzhang.smarttraffic.R;
@@ -27,9 +28,19 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 if(getSharedPreferences("setting", 0).contains(Constant.SP_ISFRAIST)){
-                    Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(SpUtil.getB(SplashActivity.this,Constant.SP_ISSELFLOGIN)) {
+                        String userName = SpUtil.getS(SplashActivity.this, Constant.SP_USERNNME);
+                        String pwd = SpUtil.getS(SplashActivity.this, Constant.SP_PASSWORD);
+                        if(TextUtils.isEmpty(userName) || TextUtils.isEmpty(pwd)){
+                            toLogin();
+                        }else {
+                            Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }else {
+                        toLogin();
+                    }
                 }else {
                     Intent intent = new Intent(SplashActivity.this,WelcomeActivity.class);
                     startActivity(intent);
@@ -39,6 +50,12 @@ public class SplashActivity extends BaseActivity {
 
             }
         }.start();
+    }
+
+    private void toLogin() {
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void initView() {

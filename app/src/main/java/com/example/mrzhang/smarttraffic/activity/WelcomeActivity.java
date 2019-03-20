@@ -3,24 +3,23 @@ package com.example.mrzhang.smarttraffic.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mrzhang.smarttraffic.R;
+import com.example.mrzhang.smarttraffic.utils.Constant;
+import com.example.mrzhang.smarttraffic.utils.SpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class WelcomeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -41,7 +40,7 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //去除任务栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);
         initView();
         initListener();
@@ -78,10 +77,10 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
             public void onPageSelected(int position) {
 
                 setDot(position);
-                if(position == (vpViews.size()-1)){
+                if (position == (vpViews.size() - 1)) {
                     mOkBtn.setVisibility(View.VISIBLE);
                     mSkipBtn.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mOkBtn.setVisibility(View.GONE);
                     mSkipBtn.setVisibility(View.GONE);
                 }
@@ -100,9 +99,9 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
         for (int i = 0; i < vpViews.size(); i++) {
             TextView textView = new TextView(this);
             textView.setText("。");
-            if(position != i) {
+            if (position != i) {
                 textView.setTextColor(Color.WHITE);
-            }else {
+            } else {
                 textView.setTextColor(Color.RED);
             }
             mDotLl.addView(textView);
@@ -112,7 +111,7 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
     private void initViewPage() {
         vpViews = new ArrayList<>();
         LayoutInflater layoutInflater = LayoutInflater.from(this);
-        vpViews.add(layoutInflater.inflate(R.layout.welcome1, null ));
+        vpViews.add(layoutInflater.inflate(R.layout.welcome1, null));
         vpViews.add(layoutInflater.inflate(R.layout.welcome2, null));
         vpViews.add(layoutInflater.inflate(R.layout.welcome3, null));
         vpViews.add(layoutInflater.inflate(R.layout.welcome4, null));
@@ -126,21 +125,31 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
             default:
                 break;
             case R.id.skip_btn:
-//                Intent intent = new Intent(WelcomeActivity.this,MainActivity.class);
-//                startActivity(intent);
-//                finish();
-                mVp.setCurrentItem(vpViews.size()-1,true);
+                mVp.setCurrentItem(vpViews.size() - 1, true);
                 break;
             case R.id.ok_btn:
-                Intent intent1 = new Intent(WelcomeActivity.this,MainActivity.class);
-                startActivity(intent1);
-                finish();
+
+                if (SpUtil.getB(WelcomeActivity.this, Constant.SP_ISSELFLOGIN)) {
+                    String userName = SpUtil.getS(WelcomeActivity.this, Constant.SP_USERNNME);
+                    String pwd = SpUtil.getS(WelcomeActivity.this, Constant.SP_PASSWORD);
+                    if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(pwd)) {
+                        toLogin();
+                    } else {
+                        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
+                    toLogin();
+                }
+
                 break;
         }
     }
 
-    class MyPageAdapter extends PagerAdapter{
+    class MyPageAdapter extends PagerAdapter {
         List<View> mlist;
+
         public MyPageAdapter(List<View> mlist) {
             this.mlist = mlist;
         }
@@ -166,5 +175,10 @@ public class WelcomeActivity extends BaseActivity implements View.OnClickListene
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView(mlist.get(position));
         }
+    }
+    private void toLogin() {
+        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

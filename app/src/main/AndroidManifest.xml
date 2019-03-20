@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".MyApp"
+        android:name=".adapter.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,6 +33,7 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity android:name=".activity.FeedbackActivity"></activity>
     </application>
 
 </manifest>

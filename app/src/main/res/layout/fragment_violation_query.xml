@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.ViolationQueryFragment">
+    android:background="#f1f1f1"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请输入车牌号"
+        android:textSize="30dp" />
 
-</FrameLayout>
+
+    <EditText
+        android:id="@+id/et_fg4_carnumber"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/btn_fg4_queryCar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="查询" />
+</LinearLayout>

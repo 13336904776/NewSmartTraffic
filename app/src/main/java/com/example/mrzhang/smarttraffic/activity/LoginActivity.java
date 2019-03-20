@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         setting = getSharedPreferences("setting", 0);
         edit = setting.edit();
 
-        boolean pwdIsCheck = setting.getBoolean(Constant.SP_PWDISChECK, false);
+        boolean pwdIsCheck = setting.getBoolean(Constant.SP_ISPWDChECK, false);
         mRememberPwdCb.setChecked(pwdIsCheck);
         if(pwdIsCheck) {
             mAccount = setting.getString(Constant.SP_USERNNME, "");
@@ -160,7 +160,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //                            SpUtil.putS(LoginActivity.this,"userRole",userRole);
 
                             boolean checked = mRememberPwdCb.isChecked();
-                            edit.putBoolean(Constant.SP_PWDISChECK, checked).commit();
+                            edit.putBoolean(Constant.SP_ISPWDChECK, checked).commit();
+                            edit.putBoolean(Constant.SP_ISSELFLOGIN, mSelfLoginCb.isChecked()).commit();
                             if (checked) {
                                 edit.putString(Constant.SP_USERNNME, mAccount).commit();
                                 edit.putString(Constant.SP_PASSWORD, mPsw).commit();
@@ -171,7 +172,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                             MyLog.showe(setting.getString(Constant.SP_USERNNME,"")+"=="
                                     +setting.getString(Constant.SP_PASSWORD,"")+""
-                            +setting.getBoolean(Constant.SP_PWDISChECK,false));
+                            +setting.getBoolean(Constant.SP_ISPWDChECK,false));
                             ;
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

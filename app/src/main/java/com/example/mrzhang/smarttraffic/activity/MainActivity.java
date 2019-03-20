@@ -1,11 +1,12 @@
 package com.example.mrzhang.smarttraffic.activity;
 
 
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.example.mrzhang.smarttraffic.fragment.RoadConditionFragment;
 import com.example.mrzhang.smarttraffic.fragment.TrafficLightManageFragment;
 import com.example.mrzhang.smarttraffic.fragment.ViolationQueryFragment;
 import com.example.mrzhang.smarttraffic.utils.MyLog;
+import com.example.mrzhang.smarttraffic.utils.MyToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class MainActivity extends FragmentActivity {
     private LinearLayout mHomeLl;
     private List<BaseFragment> fragments;
     private FragmentTransaction fragmentTransaction;
+    private DrawerLayout mDrawLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class MainActivity extends FragmentActivity {
         mTitleRightTv = (TextView) findViewById(R.id.title_right_tv);
         mFgRl = (RelativeLayout) findViewById(R.id.fg_rl);
         mHomeLl = (LinearLayout) findViewById(R.id.home_ll);
+        mDrawLayout = (DrawerLayout) findViewById(R.id.draw_layout);
     }
 
     public void initListener() {
@@ -84,6 +88,7 @@ public class MainActivity extends FragmentActivity {
         mDataList.add(new MenuBean(R.mipmap.menu_book, "数据分析"));//data analysis
         mDataList.add(new MenuBean(R.mipmap.menu_slideshow, "个人中心"));
         mDataList.add(new MenuBean(R.mipmap.menu_target, "创新题"));
+        mDataList.add(new MenuBean(R.mipmap.menu_target, "意见反馈"));
         mDataList.add(new MenuBean(R.mipmap.menu_download, "退出"));
 
         fragments = new ArrayList<BaseFragment>();
@@ -103,11 +108,12 @@ public class MainActivity extends FragmentActivity {
 
         MenuAdapter menuAdapter = new MenuAdapter(this, mDataList);
         mLeftRcv.setAdapter(menuAdapter);
+
         menuAdapter.setMenuClickListen(new MenuAdapter.MenuClickListen() {
             @Override
             public void Click(int postion) {
                 MyLog.showe("zzz" + postion);
-                if(postion < 9){
+                if (postion < 9) {
                     changeFragment(postion);
                 }
                 switch (postion) {
@@ -130,12 +136,18 @@ public class MainActivity extends FragmentActivity {
                         break;
                     case 8://创新题
                         break;
-                    case 9://退出
+                    case 9://意见反馈
+                        Intent intent = new Intent(MainActivity.this,FeedbackActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 10://退出
+                        MyToast.show(MainActivity.this,"点击了退出");
                         break;
                     default:
                         break;
 
                 }
+                mDrawLayout.closeDrawers();
             }
         });
 

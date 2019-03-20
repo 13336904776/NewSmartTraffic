@@ -18,7 +18,7 @@
         android:textColor="#FFFFFF"
         android:layout_centerInParent="true"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:text="标题"/>
 
     <TextView
@@ -29,7 +29,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textStyle="bold"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:text="副标题"
         android:paddingRight="5dp"/>
 

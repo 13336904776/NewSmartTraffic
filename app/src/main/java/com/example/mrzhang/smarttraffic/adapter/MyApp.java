@@ -1,4 +1,4 @@
-package com.example.mrzhang.smarttraffic;
+package com.example.mrzhang.smarttraffic.adapter;
 
 import android.app.Application;
 
@@ -8,8 +8,9 @@ import com.android.volley.toolbox.Volley;
 /**
  *
  */
-public class MyApp extends Application{
+public class MyApp extends Application {
     public static RequestQueue requestQueue;
+
     @Override
     public void onCreate() {
         super.onCreate();
