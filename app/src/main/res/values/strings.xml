@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SmartTraffic</string>
+    <string name="app_name">我的智慧交通</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
@@ -25,5 +25,11 @@
         <item>绿灯降序</item>
         <item>黄灯升序</item>
         <item>黄灯降序</item>
+    </string-array>
+
+    <string-array name="carId">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>
