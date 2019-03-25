@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.mrzhang.newsmarttraffic.BaseUrl;
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.application.MyApp;
+import com.example.mrzhang.newsmarttraffic.db.Mydb;
 import com.example.mrzhang.newsmarttraffic.utils.Constant;
 import com.example.mrzhang.newsmarttraffic.utils.MyToast;
 import com.example.mrzhang.newsmarttraffic.utils.SpUtil;
@@ -154,7 +157,7 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
         }
 
         String sCatId = mSpCarNum.getSelectedItem().toString();
-        int nCarId = Integer.parseInt(sCatId);
+        final int nCarId = Integer.parseInt(sCatId);
         JSONObject object = new JSONObject();
         try {
             object.put("CarId", nCarId);
@@ -163,6 +166,7 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        final int finalNRechrgeAmount = nRechrgeAmount;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(BaseUrl.ALLURL + "set_car_account_recharge", object,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -173,6 +177,16 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
                             MyToast.show(getContext(),"充值成功");
                             mEdtRechargeAmount.setText("");
                             getCarBalance();
+                            //存到数据库中
+                            Mydb mydb = new Mydb(getContext());
+                            SQLiteDatabase database = mydb.getWritableDatabase();
+                            ContentValues contentValues = new ContentValues();
+                            contentValues.put("operator",userName);
+                            contentValues.put("carId",nCarId);
+                            contentValues.put("rechargeAmount", finalNRechrgeAmount);
+                            long currentTimeMillis = System.currentTimeMillis();
+                            contentValues.put("date",currentTimeMillis);
+                            database.insert("recharge",null,contentValues);
                         }else {
                             String errmsg = jsonObject.optString("ERRMSG");
                             MyToast.show(getContext(),errmsg);
