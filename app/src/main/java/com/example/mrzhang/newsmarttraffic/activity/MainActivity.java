@@ -142,16 +142,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         MenuAdapter menuAdapter = new MenuAdapter(this, mDataList);
         mLeftRcv.setAdapter(menuAdapter);
 
-
         menuAdapter.setMenuClickListen(new MenuAdapter.MenuClickListen() {
             @Override
             public void Click(int postion,String title) {
                 MyLog.showe("zzz" + postion);
                 mTitleTv.setText(title);
                 mDrawLayout.closeDrawer(mLlLeftHome);
+                mTitleRightTv.setText("");
                 switch (title) {
                     case "我的账户"://我的账户
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, accountManageFragment).commit();
+                        mTitleRightTv.setText("账单管理");
+                        mTitleRightTv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(MainActivity.this,BillManageActivity.class);
+                                startActivity(intent);
+                            }
+                        });
                         break;
                     case "公交查询"://公交查询
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, busInquiryFragment).commit();

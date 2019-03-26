@@ -31,4 +31,9 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+
+    <string-array name="time">
+        <item>时间降序</item>
+        <item>时间升序</item>
+    </string-array>
 </resources>
