@@ -20,11 +20,14 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".activity.WelcomeActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="landscape"/>
         <!-- android:configChanges="orientation|screenSize|keyboardHidden"  加上此属性，屏幕旋转时不重走生命周期 -->
         <activity
             android:name=".activity.SplashActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,9 +37,11 @@
 
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="landscape"/>
 
-        <activity android:name=".activity.FeedbackActivity">
+        <activity android:name=".activity.FeedbackActivity"
+            android:screenOrientation="landscape">
 
         </activity>
     </application>

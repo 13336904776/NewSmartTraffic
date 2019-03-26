@@ -156,7 +156,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if ("S".equals(result)) {//请求成功且登录成功
                             String userRole = jsonObject.optString("UserRole");
 
-                            edit.putString("userRole", userRole).commit();
+                            edit.putString(Constant.SP_USERROLE, userRole).commit();
 //                            SpUtil.putS(LoginActivity.this,"userRole",userRole);
 
                             boolean checked = mRememberPwdCb.isChecked();

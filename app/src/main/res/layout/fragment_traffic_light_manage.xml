@@ -12,12 +12,13 @@
         android:layout_marginTop="20dp"
         android:text="红绿灯信息管理"
         android:textSize="26sp"
-        android:textColor="#000"/>
+        android:textColor="#000"
+        android:layout_marginLeft="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_margin="20dp"
         android:orientation="horizontal">
 
         <TextView
@@ -27,7 +28,7 @@
             android:textSize="26sp" />
 
         <Spinner
-            android:id="@+id/spinner_fg3"
+            android:id="@+id/spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -39,52 +40,29 @@
 
 
         <Button
-            android:id="@+id/btn_fg3_quertLight"
+            android:id="@+id/btn_quert_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/type"
+            android:background="@drawable/bg_btn"
             android:text="查询" />
     </LinearLayout>
 
-    <LinearLayout
+    <include layout="@layout/item_traffic_light"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/type"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:text="路口"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/type"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:text="红灯时长(S)"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/type"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:text="黄灯时长(S)"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/type"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:text="绿灯时长(S)"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+    </android.support.v7.widget.RecyclerView>
+
 
 
 </LinearLayout>

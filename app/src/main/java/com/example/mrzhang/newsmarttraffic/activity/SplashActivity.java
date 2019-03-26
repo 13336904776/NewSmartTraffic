@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.utils.Constant;
+import com.example.mrzhang.newsmarttraffic.utils.MyLog;
 import com.example.mrzhang.newsmarttraffic.utils.SpUtil;
 
 public class SplashActivity extends BaseActivity {
@@ -18,6 +19,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        MyLog.showe("进入APP闪屏页面");
         initView();
         CountDownTimer countDownTimer = new CountDownTimer(5000,1000) {
             @Override
