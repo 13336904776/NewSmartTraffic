@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.activity.MyVideoActivity;
+import com.example.mrzhang.newsmarttraffic.activity.VideoViewActivity;
 import com.example.mrzhang.newsmarttraffic.utils.MyLog;
 
 /**
@@ -50,7 +51,7 @@ public class ViolationQueryFragment extends BaseFragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 MyLog.showe("checkedId==>"+checkedId+"  CheckedRadioButtonId==>"+group.getCheckedRadioButtonId());
                 if(checkedId == R.id.rb2){
-                    Intent intent = new Intent(getActivity(), MyVideoActivity.class);
+                    Intent intent = new Intent(getActivity(), VideoViewActivity.class);
                     startActivity(intent);
                 }
             }
