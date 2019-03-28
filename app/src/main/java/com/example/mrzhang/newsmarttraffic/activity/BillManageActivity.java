@@ -60,7 +60,7 @@ public class BillManageActivity extends AppCompatActivity implements View.OnClic
 
     private void initData() {
         mTitleTv.setText("账单管理");
-        mTitleLeftIv.setBackgroundResource(R.mipmap.ic_menu);
+        mTitleLeftIv.setBackgroundResource(R.mipmap.ic_back);
         mRcv.setLayoutManager(new LinearLayoutManager(this));
         getData();
     }

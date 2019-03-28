@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if(!SpUtil.getS(this,Constant.SP_USERROLE).equals("nor_user")) {
             mDataList.add(new MenuBean(R.mipmap.menu_slideshow, "红绿灯管理"));
         }
-        mDataList.add(new MenuBean(R.mipmap.menu_target, "违章查询"));
+        mDataList.add(new MenuBean(R.mipmap.menu_target, "车辆违章"));
         mDataList.add(new MenuBean(R.mipmap.menu_download, "道路状况"));
         mDataList.add(new MenuBean(R.mipmap.menu_star, "生活助手"));
         mDataList.add(new MenuBean(R.mipmap.menu_book, "数据分析"));//data analysis
@@ -121,22 +121,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         dataAnalysisFragment = new DataAnalysisFragment();
         personalCenterFragment = new PersonalCenterFragment();
         innovativeFragment = new InnovativeFragment();
-//        fragments = new ArrayList<BaseFragment>();
-//        fragments.add(accountManageFragment);
-//        fragments.add(busInquiryFragment);
-//        fragments.add(trafficLightManageFragment);
-//        fragments.add(violationQueryFragment);
-//        fragments.add(roadConditionFragment);
-//        fragments.add(lifeAssistantFragment);
-//        fragments.add(dataAnalysisFragment);
-//        fragments.add(personalCenterFragment);
-//        fragments.add(innovativeFragment);
 
         //默认显示第一个（我的账户）页面
         supportFragmentManager = getSupportFragmentManager();
         fragmentTransaction = supportFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fg_rl, accountManageFragment).commit();
-        mTitleTv.setText(mDataList.get(0).getTitle());
+        mTitleTv.setText("我的账户");
+        initFristPage();
 
         //初始化左边列表布局
         MenuAdapter menuAdapter = new MenuAdapter(this, mDataList);
@@ -151,15 +141,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 mTitleRightTv.setText("");
                 switch (title) {
                     case "我的账户"://我的账户
-                        supportFragmentManager.beginTransaction().replace(R.id.fg_rl, accountManageFragment).commit();
-                        mTitleRightTv.setText("账单管理");
-                        mTitleRightTv.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(MainActivity.this,BillManageActivity.class);
-                                startActivity(intent);
-                            }
-                        });
+                        initFristPage();
                         break;
                     case "公交查询"://公交查询
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, busInquiryFragment).commit();
@@ -167,7 +149,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     case "红绿灯管理"://红绿灯管理
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, trafficLightManageFragment).commit();
                         break;
-                    case "违章查询"://违章查询
+                    case "车辆违章"://车辆违章
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, violationQueryFragment).commit();
                         break;
                     case "道路状况"://道路状况
@@ -203,6 +185,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
         });
 
+    }
+
+    private void initFristPage() {
+        supportFragmentManager.beginTransaction().replace(R.id.fg_rl, accountManageFragment).commit();
+        mTitleRightTv.setText("账单管理");
+        mTitleRightTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,BillManageActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void changeFragment(int position) {
