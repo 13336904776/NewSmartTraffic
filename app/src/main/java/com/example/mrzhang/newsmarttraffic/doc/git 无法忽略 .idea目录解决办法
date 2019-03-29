@@ -1,0 +1,3 @@
+在项目目录里面 右键 git bash here  
+输入命令  
+`git rm -rf --cached .idea`

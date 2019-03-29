@@ -105,107 +105,114 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
     }
 
     protected void play(int msec) {
-                 Log.i("zz", " 获取视频文件地址");
-               String path = Environment.getExternalStorageDirectory().getPath() + "/Download/大人的片想.mp4";
-                File file = new File(path);
-                if (!file.exists()) {
-                       Toast.makeText(this, "视频文件路径错误", Toast.LENGTH_SHORT).show();
-                       return;
-                    }
+        Log.i("zz", " 获取视频文件地址");
+        String path = Environment.getExternalStorageDirectory().getPath() + "/0003/paomo.mp4";
+//        File file = new File(path);
+//        if (!file.exists()) {
+//            Toast.makeText(this, "视频文件路径错误", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-               Log.i("zz", "指定视频源路径");
-               vv_video.setVideoPath(file.getAbsolutePath());
-                Log.i("zz", "开始播放");
-                vv_video.start();
+        Log.i("zz", "指定视频源路径"+path);
+        vv_video.setVideoPath(path);
+        Log.i("zz", "开始播放");
+        vv_video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+//        vv_video.start();
 
-                 // 按照初始位置播放
-                vv_video.seekTo(msec);
-                // 设置进度条的最大进度为视频流的最大播放时长
-                 seekBar.setMax(vv_video.getDuration());
+        // 按照初始位置播放
+        vv_video.seekTo(msec);
+        // 设置进度条的最大进度为视频流的最大播放时长
+        seekBar.setMax(vv_video.getDuration());
 
-                // 开始线程，更新进度条的刻度
-               new Thread() {
+        // 开始线程，更新进度条的刻度
+        new Thread() {
 
-                   @Override
+            @Override
             public void run() {
-                         try {
-                                 isPlaying = true;
-                                 while (isPlaying) {
-                                         // 如果正在播放，没0.5.毫秒更新一次进度条
-                                         int current = vv_video.getCurrentPosition();
-                                         seekBar.setProgress(current);
+                try {
+                    isPlaying = true;
+                    while (isPlaying) {
+                        // 如果正在播放，没0.5.毫秒更新一次进度条
+                        int current = vv_video.getCurrentPosition();
+                        seekBar.setProgress(current);
 
-                                         sleep(500);
-                                     }
-                             } catch (Exception e) {
-                                 e.printStackTrace();
-                             }
-                     }
- }.start();
-         // 播放之后设置播放按钮不可用
-         btn_play.setEnabled(false);
+                        sleep(500);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+        // 播放之后设置播放按钮不可用
+        btn_play.setEnabled(false);
 
-         vv_video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        vv_video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
-             @Override
-     public void onCompletion(MediaPlayer mp) {
-          // 在播放完毕被回调
-                 btn_play.setEnabled(true);
-                           }
- });
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // 在播放完毕被回调
+                btn_play.setEnabled(true);
+            }
+        });
 
-         vv_video.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        vv_video.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 
-             @Override
-             public boolean onError(MediaPlayer mp, int what, int extra) {
-                                // 发生错误重新播放
-                                play(0);
-                                isPlaying = false;
-                                return false;
-                            }
- });
-     }
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                // 发生错误重新播放
+                play(0);
+                isPlaying = false;
+                return false;
+            }
+        });
+    }
 
-     /**
-      * 重新开始播放
-       */
-         protected void replay() {
-             if (vv_video != null && vv_video.isPlaying()) {
-                     vv_video.seekTo(0);
-                     Toast.makeText(this, "重新播放", Toast.LENGTH_SHORT).show();
-                     btn_pause.setText("暂停");
-                     return;
-                 }
-             isPlaying = false;
-             play(0);
+    /**
+     * 重新开始播放
+     */
+    protected void replay() {
+        if (vv_video != null && vv_video.isPlaying()) {
+            vv_video.seekTo(0);
+            Toast.makeText(this, "重新播放", Toast.LENGTH_SHORT).show();
+            btn_pause.setText("暂停");
+            return;
+        }
+        isPlaying = false;
+        play(0);
 
-         }
-     /**
-      * 暂停或继续
-      */
-         protected void pause() {
-             if (btn_pause.getText().toString().trim().equals("继续")) {
-                   btn_pause.setText("暂停");
-                   vv_video.start();
-                   Toast.makeText(this, "继续播放", Toast.LENGTH_SHORT).show();
-                   return;
-               }
-           if (vv_video != null && vv_video.isPlaying()) {
-                   vv_video.pause();
-                   btn_pause.setText("继续");
-                   Toast.makeText(this, "暂停播放", Toast.LENGTH_SHORT).show();
-               }
-       }
+    }
 
-     /*
+    /**
+     * 暂停或继续
+     */
+    protected void pause() {
+        if (btn_pause.getText().toString().trim().equals("继续")) {
+            btn_pause.setText("暂停");
+            vv_video.start();
+            Toast.makeText(this, "继续播放", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (vv_video != null && vv_video.isPlaying()) {
+            vv_video.pause();
+            btn_pause.setText("继续");
+            Toast.makeText(this, "暂停播放", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*
      * 停止播放
      */
-         protected void stop() {
-             if (vv_video != null && vv_video.isPlaying()) {
-                     vv_video.stopPlayback();
-                     btn_play.setEnabled(true);
-                     isPlaying = false;
-                 }
-         }
+    protected void stop() {
+        if (vv_video != null && vv_video.isPlaying()) {
+            vv_video.stopPlayback();
+            btn_play.setEnabled(true);
+            isPlaying = false;
+        }
+    }
 
 }

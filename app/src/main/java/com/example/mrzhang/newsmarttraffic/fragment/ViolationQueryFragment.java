@@ -2,23 +2,28 @@ package com.example.mrzhang.newsmarttraffic.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.activity.MyVideoActivity;
 import com.example.mrzhang.newsmarttraffic.activity.VideoViewActivity;
 import com.example.mrzhang.newsmarttraffic.utils.MyLog;
 
+import java.io.File;
+
 /**
  * 违章查询
  */
-public class ViolationQueryFragment extends BaseFragment {
+public class ViolationQueryFragment extends BaseFragment implements View.OnClickListener {
     private View view;
     /**
      * 违章视频
@@ -30,6 +35,34 @@ public class ViolationQueryFragment extends BaseFragment {
     private RadioButton mRb2;
     private RadioGroup mRg;
     private RecyclerView mRcv;
+    /**
+     * 11
+     */
+    private Button mBtn1;
+    /**
+     * 22
+     */
+    private Button mBtn2;
+    /**
+     * 33
+     */
+    private Button mBtn3;
+    /**
+     * 4
+     */
+    private Button mBtn4;
+    /**
+     * 5
+     */
+    private Button mBtn5;
+    /**
+     * 6
+     */
+    private Button mBtn6;
+    /**
+     * 7
+     */
+    private Button mBtn7;
 
 
 //    @Override
@@ -49,11 +82,11 @@ public class ViolationQueryFragment extends BaseFragment {
         mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                MyLog.showe("checkedId==>"+checkedId+"  CheckedRadioButtonId==>"+group.getCheckedRadioButtonId());
-                if(checkedId == R.id.rb2){
-                    Intent intent = new Intent(getActivity(), VideoViewActivity.class);
-                    startActivity(intent);
-                }
+//                MyLog.showe("checkedId==>" + checkedId + "  CheckedRadioButtonId==>" + group.getCheckedRadioButtonId());
+//                if (checkedId == R.id.rb2) {
+//                    Intent intent = new Intent(getActivity(), VideoViewActivity.class);
+//                    startActivity(intent);
+//                }
             }
         });
         return view;
@@ -64,5 +97,60 @@ public class ViolationQueryFragment extends BaseFragment {
         mRb2 = (RadioButton) view.findViewById(R.id.rb2);
         mRg = (RadioGroup) view.findViewById(R.id.rg);
         mRcv = (RecyclerView) view.findViewById(R.id.rcv);
+        mBtn1 = (Button) view.findViewById(R.id.btn1);
+        mBtn1.setOnClickListener(this);
+        mBtn2 = (Button) view.findViewById(R.id.btn2);
+        mBtn2.setOnClickListener(this);
+        mBtn3 = (Button) view.findViewById(R.id.btn3);
+        mBtn3.setOnClickListener(this);
+        mBtn4 = (Button) view.findViewById(R.id.btn4);
+        mBtn4.setOnClickListener(this);
+        mBtn5 = (Button) view.findViewById(R.id.btn5);
+        mBtn5.setOnClickListener(this);
+        mBtn6 = (Button) view.findViewById(R.id.btn6);
+        mBtn6.setOnClickListener(this);
+        mBtn7 = (Button) view.findViewById(R.id.btn7);
+        mBtn7.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.btn1:
+                Intent intent = new Intent(getActivity(), MyVideoActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn2:
+                Intent intent1 = new Intent(getActivity(), VideoViewActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.btn3:
+                File filesDir = getActivity().getFilesDir();
+                File externalFilesDir = getActivity().getExternalFilesDir(null);
+                File externalCacheDir = getActivity().getExternalCacheDir();
+                File externalStorageDirectory = Environment.getExternalStorageDirectory();
+                MyLog.showe("filesDir==>"+filesDir+"  filesDir.path==>"+filesDir.getPath());
+                MyLog.showe("externalFilesDir==>"+externalFilesDir+"  externalFilesDir.path==>"+externalFilesDir.getPath());
+                MyLog.showe("externalCacheDir==>"+externalCacheDir+"  externalCacheDir.path==>"+externalCacheDir.getPath());
+                MyLog.showe("externalStorageDirectory==>"+externalStorageDirectory+"  externalStorageDirectory.path==>"+externalStorageDirectory.getPath());
+                break;
+            case R.id.btn4:
+                if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                    // SD卡可用
+                    MyLog.showe("sd可用");
+                } else {
+                    Toast.makeText(getActivity(),"SD卡不可用，请检查SD卡",Toast.LENGTH_LONG).show();
+                }
+
+                break;
+            case R.id.btn5:
+                break;
+            case R.id.btn6:
+                break;
+            case R.id.btn7:
+                break;
+        }
     }
 }

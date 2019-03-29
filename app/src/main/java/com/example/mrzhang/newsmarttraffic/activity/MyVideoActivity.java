@@ -22,17 +22,23 @@ public class MyVideoActivity extends BaseActivity {
         setContentView(R.layout.activity_my_video);
         initView();
 
-        String videopath = Environment.getExternalStorageDirectory().getPath() + "/Download/大人的片想.mp4";
+        String videopath = Environment.getExternalStorageDirectory().getPath() + "/0003/paomo.mp4";
+        String videopath1 = "android.resource://" + getPackageName() + "/raw/paomo";
         Uri uri = Uri.parse(videopath);
-//        mVideoView.setMediaController(new MediaController(this));
+        mVideoView.setMediaController(new MediaController(this));
 //        mVideoView.setVideoURI(uri);
-        File file = new File(videopath);
-        if(!file.exists()){
-            Toast.makeText(this, "视频文件路径错误", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mVideoView.setVideoPath(file.getAbsolutePath());
-        mVideoView.start();
+//        File file = new File(videopath);
+//        if(!file.exists()){
+//            Toast.makeText(this, "视频文件路径错误", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        mVideoView.setVideoPath(videopath);
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
         mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
