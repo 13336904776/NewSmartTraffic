@@ -26,6 +26,7 @@ import com.example.mrzhang.newsmarttraffic.fragment.DataAnalysisFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.InnovativeFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.LifeAssistantFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.PersonalCenterFragment;
+import com.example.mrzhang.newsmarttraffic.fragment.RealTimeShowFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.RoadConditionFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.TrafficLightManageFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.ViolationQueryFragment;
@@ -65,6 +66,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private PersonalCenterFragment personalCenterFragment;
     private InnovativeFragment innovativeFragment;
     private FragmentManager supportFragmentManager;
+    private RealTimeShowFragment realTimeShowFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             mDataList.add(new MenuBean(R.mipmap.menu_slideshow, "红绿灯管理"));
         }
         mDataList.add(new MenuBean(R.mipmap.menu_target, "车辆违章"));
+        mDataList.add(new MenuBean(R.mipmap.menu_target, "实时显示"));
         mDataList.add(new MenuBean(R.mipmap.menu_download, "道路状况"));
         mDataList.add(new MenuBean(R.mipmap.menu_star, "生活助手"));
         mDataList.add(new MenuBean(R.mipmap.menu_book, "数据分析"));//data analysis
@@ -116,6 +119,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         busInquiryFragment = new BusInquiryFragment();
         trafficLightManageFragment = new TrafficLightManageFragment();
         violationQueryFragment = new ViolationQueryFragment();
+        realTimeShowFragment = new RealTimeShowFragment();
         roadConditionFragment = new RoadConditionFragment();
         lifeAssistantFragment = new LifeAssistantFragment();
         dataAnalysisFragment = new DataAnalysisFragment();
@@ -151,6 +155,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         break;
                     case "车辆违章"://车辆违章
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, violationQueryFragment).commit();
+                        break;
+                    case "实时显示"://实时显示
+                        supportFragmentManager.beginTransaction().replace(R.id.fg_rl, realTimeShowFragment).commit();
                         break;
                     case "道路状况"://道路状况
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, roadConditionFragment).commit();
