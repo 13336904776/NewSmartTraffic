@@ -3,7 +3,7 @@ package com.example.mrzhang.newsmarttraffic.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.mrzhang.newsmarttraffic.bean.Sense;
+import com.example.mrzhang.newsmarttraffic.bean.SenseBean;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -14,9 +14,9 @@ import java.sql.SQLException;
 /**
  *
  */
-public class OrmDBHelper extends OrmLiteSqliteOpenHelper{
+public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
     private static OrmDBHelper Instance;
-    private static Dao<Sense,Integer> senseDao;
+    private static Dao<SenseBean, Integer> senseDao;
 
     public OrmDBHelper(Context context) {
         super(context, "ormdb", null, 1);
@@ -25,7 +25,7 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
-            TableUtils.clearTable(connectionSource,Sense.class);
+            TableUtils.clearTable(connectionSource, SenseBean.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -36,10 +36,10 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper{
 
     }
 
-    public static synchronized OrmDBHelper gethelp(Context context){
-        if(Instance == null){
-            synchronized (OrmDBHelper.class){
-                if(Instance == null){
+    public static synchronized OrmDBHelper gethelp(Context context) {
+        if (Instance == null) {
+            synchronized (OrmDBHelper.class) {
+                if (Instance == null) {
                     Instance = new OrmDBHelper(context);
                 }
             }
@@ -47,9 +47,9 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper{
         return Instance;
     }
 
-    public Dao<Sense,Integer> getSenseDao() throws SQLException {
-        if(senseDao == null){
-            senseDao = getDao(Sense.class);
+    public Dao<SenseBean, Integer> getSenseDao() throws SQLException {
+        if (senseDao == null) {
+            senseDao = getDao(SenseBean.class);
         }
         return senseDao;
     }

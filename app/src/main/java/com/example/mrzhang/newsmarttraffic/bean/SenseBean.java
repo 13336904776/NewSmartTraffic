@@ -1,24 +1,30 @@
 package com.example.mrzhang.newsmarttraffic.bean;
 
-import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+@DatabaseTable(tableName = "sense")
 public class SenseBean {
 
-    @SerializedName("pm2.5")
-    private int _$Pm25201; // FIXME check this code
+    @DatabaseField(columnName = "pm25")
+    private int pm25; // FIXME check this code
     private String ERRMSG;
+    @DatabaseField(columnName = "co2")
     private int co2;
+    @DatabaseField(columnName = "temperature")
     private int temperature;
+    @DatabaseField(columnName = "LightIntensity")
     private int LightIntensity;
+    @DatabaseField(columnName = "humidity")
     private int humidity;
     private String RESULT;
 
-    public int get_$Pm25201() {
-        return _$Pm25201;
+    public int getPm25() {
+        return pm25;
     }
 
-    public void set_$Pm25201(int _$Pm25201) {
-        this._$Pm25201 = _$Pm25201;
+    public void setPm25(int pm25) {
+        this.pm25 = pm25;
     }
 
     public String getERRMSG() {

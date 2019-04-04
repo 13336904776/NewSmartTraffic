@@ -25,6 +25,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONObject;
 
@@ -40,6 +41,8 @@ public class Fragment1 extends RealTimeBaseFragment implements View.OnClickListe
     private LineChart mChart;
     private int index;
     private RequestQueue requestQueue;
+    private Dao<SenseBean, Integer> senseDao;
+    private List<SenseBean> senseBeans;
 
     @Nullable
     @Override
@@ -47,13 +50,8 @@ public class Fragment1 extends RealTimeBaseFragment implements View.OnClickListe
         View inflate = inflater.inflate(R.layout.item_real_time, container, false);
         initView(inflate);
         tv_title.setText("温度");
-
         initChart();
-
-//        setData(20, 30);
-
         requestQueue = Volley.newRequestQueue(getActivity());
-
 
         return inflate;
     }
@@ -65,28 +63,58 @@ public class Fragment1 extends RealTimeBaseFragment implements View.OnClickListe
     }
 
     private void initChart() {
-        mChart.setMaxVisibleValueCount(20);
+        mChart.setVisibleXRange(20,20);
+        mChart.setTouchEnabled(false);
+        mChart.setDescription("");
 //        mChart.setVisibleXRangeMinimum(20);
         XAxis xAxis = mChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setEnabled(true);
 //        xAxis.setDrawAxisLine(true);
+        //是否有网格线
         xAxis.setDrawGridLines(false);
-        xAxis.setSpaceBetweenLabels(1);
+//        xAxis.setSpaceBetweenLabels(1);
 
-
+        //得到左侧的轴
         YAxis axisLeft = mChart.getAxisLeft();
+        //设置左侧文字显示的位置  OUTSIDE_CHART显示在表格外边（左边）
         axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        //设置左侧轴是否可用 true可用
         axisLeft.setDrawLabels(true);
 
+        //得到右侧的轴
         YAxis axisRight = mChart.getAxisRight();
         axisRight.setDrawLabels(false);
 
+        OrmDBHelper dbHelper = OrmDBHelper.gethelp(getActivity());
+        try {
+            senseDao = dbHelper.getSenseDao();
+            senseBeans = senseDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //一个坐标数组
         ArrayList<Entry> entries = new ArrayList<>();
-//        for (int i = 0; i < 20; i++) {
-//            entries.add(new Entry((int) (1 + Math.random() * (10 - 1 + 1)), i));
-//        }
+        //X轴数组
+        ArrayList<String> Xlist = new ArrayList<>();
+        if(senseBeans != null && senseBeans.size() > 0){
+            if(senseBeans.size() > 20) {
+                for (int i = senseBeans.size() - 20,j = 0; i < senseBeans.size(); i++,j++) {
+                    entries.add(new Entry(senseBeans.get(i).getTemperature(),j));
+//                    Xlist.add(senseBeans.get(i).get)
+                }
+            }else {
+                for (int i = 0; i < senseBeans.size(); i++) {
+                    entries.add(new Entry(senseBeans.get(i).getTemperature(),i));
+                }
+            }
+        }
+        //把坐标数组转换成表格能识别的坐标轴
         LineDataSet lineDataSet = new LineDataSet(entries, "linedata");
+        lineDataSet.setCircleColor(0xff999999);
+        lineDataSet.setColor(0xff999999);
+
         ArrayList<LineDataSet> arrayList = new ArrayList<LineDataSet>();
         arrayList.add(lineDataSet);
 
@@ -123,12 +151,7 @@ public class Fragment1 extends RealTimeBaseFragment implements View.OnClickListe
                         if ("S".equals(senseBean.getRESULT())) {
                             int temperature = senseBean.getTemperature();
                             LineData lineData = mChart.getLineData();
-//                            OrmDBHelper help = OrmDBHelper.gethelp(getActivity());
-//                            try {
-//                                help.getSenseDao().delete();
-//                            } catch (SQLException e) {
-//                                e.printStackTrace();
-//                            }
+
                             if(lineData != null){
                                 LineDataSet dataSet = lineData.getDataSetByIndex(0);
                                 if(dataSet == null){

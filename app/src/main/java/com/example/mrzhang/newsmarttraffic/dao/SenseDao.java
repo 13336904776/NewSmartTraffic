@@ -2,7 +2,6 @@ package com.example.mrzhang.newsmarttraffic.dao;
 
 import android.content.Context;
 
-import com.example.mrzhang.newsmarttraffic.bean.Sense;
 import com.example.mrzhang.newsmarttraffic.db.OrmDBHelper;
 
 import java.sql.SQLException;

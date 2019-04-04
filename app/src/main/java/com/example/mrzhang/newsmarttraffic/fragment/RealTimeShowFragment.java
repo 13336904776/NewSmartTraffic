@@ -5,24 +5,43 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.mrzhang.newsmarttraffic.BaseUrl;
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.adapter.MyRealTimeShowAdapter;
+import com.example.mrzhang.newsmarttraffic.application.MyApp;
+import com.example.mrzhang.newsmarttraffic.bean.SenseBean;
+import com.example.mrzhang.newsmarttraffic.db.OrmDBHelper;
+import com.example.mrzhang.newsmarttraffic.enent.MessageEvent;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment1;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment2;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment3;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment4;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment5;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment6;
+import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
+
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class RealTimeShowFragment extends BaseFragment implements View.OnClickListener {
     private View view;
@@ -34,12 +53,70 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
     private TextView mTv5;
     private TextView mTv6;
     private LinearLayout mLlDit;
+    private Dao<SenseBean, Integer> senseDao;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_real_time_show, container, false);
         initView(view);
+        initViewPage();
+
+        OrmDBHelper ormHelper = OrmDBHelper.gethelp(getActivity());
+        try {
+            senseDao = ormHelper.getSenseDao();
+
+            getData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return view;
+    }
+
+    private void getData() throws SQLException {
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                JSONObject object = new JSONObject();
+                long l = System.currentTimeMillis();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yy$MM&dd HH:mm:ss",Locale.CHINA);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss", Locale.CHINA);
+                final String format = dateFormat.format(l);
+                Log.e("zz", "当前时间==》" + format);
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, BaseUrl.ALLURL + "get_all_sense", object.toString(),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject jsonObject) {
+                                Gson gson = new Gson();
+                                SenseBean senseBean = gson.fromJson(jsonObject.toString(), SenseBean.class);
+
+                                if ("S".equals(senseBean.getRESULT())) {
+
+                                    int temperature = senseBean.getTemperature();
+                                    //向fragment1-6发送数据，fragment1-6收到数据后更新
+                                    EventBus.getDefault().post(new MessageEvent("temperature", format, temperature));
+                                    EventBus.getDefault().post(new MessageEvent("pm2.5", format, senseBean.getPm25()));
+                                    EventBus.getDefault().post(new MessageEvent("co2", format, senseBean.getCo2()));
+                                    EventBus.getDefault().post(new MessageEvent("lightIntensity", format, senseBean.getLightIntensity()));
+                                    EventBus.getDefault().post(new MessageEvent("humidity", format, senseBean.getHumidity()));
+
+                                    try {
+                                        senseDao.create(senseBean);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } else {
+                                    Toast.makeText(getActivity(), senseBean.getERRMSG(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, null);
+                MyApp.getRequestQueue().add(request);
+            }
+        }, 1000, 3000);
+    }
+
+    private void initViewPage() {
         List<Fragment> mList = new ArrayList<Fragment>();
         mList.add(new Fragment1());
         mList.add(new Fragment2());
@@ -95,7 +172,6 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
 
             }
         });
-        return view;
     }
 
     private void initView(View view) {
