@@ -3,12 +3,16 @@ package com.example.mrzhang.newsmarttraffic.bean;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "sense")
+import java.lang.reflect.GenericDeclaration;
+
+@DatabaseTable(tableName = "sensebean")
 public class SenseBean {
+
+    @DatabaseField(generatedId = true)
+    private int id;
 
     @DatabaseField(columnName = "pm25")
     private int pm25; // FIXME check this code
-    private String ERRMSG;
     @DatabaseField(columnName = "co2")
     private int co2;
     @DatabaseField(columnName = "temperature")
@@ -17,7 +21,15 @@ public class SenseBean {
     private int LightIntensity;
     @DatabaseField(columnName = "humidity")
     private int humidity;
+    @DatabaseField(columnName = "currentTime")
+    private String currentTime;
+    @DatabaseField(columnName = "ms")
+    private String ms;
+    private String ERRMSG;
     private String RESULT;
+
+    public SenseBean() {
+    }
 
     public int getPm25() {
         return pm25;
@@ -73,5 +85,36 @@ public class SenseBean {
 
     public void setRESULT(String RESULT) {
         this.RESULT = RESULT;
+    }
+
+    public String getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(String currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public String getMs() {
+        return ms;
+    }
+
+    public void setMs(String ms) {
+        this.ms = ms;
+    }
+
+    @Override
+    public String toString() {
+        return "SenseBean{" +
+                "pm25=" + pm25 +
+                ", ERRMSG='" + ERRMSG + '\'' +
+                ", co2=" + co2 +
+                ", temperature=" + temperature +
+                ", LightIntensity=" + LightIntensity +
+                ", humidity=" + humidity +
+                ", currentTime='" + currentTime + '\'' +
+                ", ms='" + ms + '\'' +
+                ", RESULT='" + RESULT + '\'' +
+                '}';
     }
 }

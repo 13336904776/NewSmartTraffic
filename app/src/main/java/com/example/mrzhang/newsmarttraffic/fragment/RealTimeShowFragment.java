@@ -78,10 +78,10 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
             @Override
             public void run() {
                 JSONObject object = new JSONObject();
-                long l = System.currentTimeMillis();
+                final long timeMillis = System.currentTimeMillis();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yy$MM&dd HH:mm:ss",Locale.CHINA);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss", Locale.CHINA);
-                final String format = dateFormat.format(l);
+                final String format = dateFormat.format(timeMillis);
                 Log.e("zz", "当前时间==》" + format);
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, BaseUrl.ALLURL + "get_all_sense", object.toString(),
                         new Response.Listener<JSONObject>() {
@@ -91,6 +91,14 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
                                 SenseBean senseBean = gson.fromJson(jsonObject.toString(), SenseBean.class);
 
                                 if ("S".equals(senseBean.getRESULT())) {
+                                    senseBean.setCurrentTime(timeMillis + "");
+                                    senseBean.setMs(format);
+                                    try {
+//                                        senseDao.create(senseBean);
+                                        senseDao.createIfNotExists(senseBean);
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     int temperature = senseBean.getTemperature();
                                     //向fragment1-6发送数据，fragment1-6收到数据后更新
@@ -100,11 +108,7 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
                                     EventBus.getDefault().post(new MessageEvent("lightIntensity", format, senseBean.getLightIntensity()));
                                     EventBus.getDefault().post(new MessageEvent("humidity", format, senseBean.getHumidity()));
 
-                                    try {
-                                        senseDao.create(senseBean);
-                                    } catch (SQLException e) {
-                                        e.printStackTrace();
-                                    }
+
 
                                 } else {
                                     Toast.makeText(getActivity(), senseBean.getERRMSG(), Toast.LENGTH_SHORT).show();

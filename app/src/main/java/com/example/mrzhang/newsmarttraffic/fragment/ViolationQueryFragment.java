@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -16,9 +16,13 @@ import android.widget.Toast;
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.activity.MyVideoActivity;
 import com.example.mrzhang.newsmarttraffic.activity.VideoViewActivity;
+import com.example.mrzhang.newsmarttraffic.bean.VideoBean;
 import com.example.mrzhang.newsmarttraffic.utils.MyLog;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 违章查询
@@ -34,7 +38,6 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
      */
     private RadioButton mRb2;
     private RadioGroup mRg;
-    private RecyclerView mRcv;
     /**
      * 11
      */
@@ -63,14 +66,7 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
      * 7
      */
     private Button mBtn7;
-
-
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_violation_query, null);
-//        return view;
-//    }
+    private GridView mGridview;
 
 
     @Nullable
@@ -79,14 +75,26 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
         View view = inflater.inflate(R.layout.fragment_violation_query, container, false);
         initView(view);
         mRb1.setChecked(true);
+
+        List<VideoBean> videoList = new ArrayList<VideoBean>();
+        videoList.add(new VideoBean("/0003/paomo.mp4",R.mipmap.violation,"泡沫"));
+        videoList.add(new VideoBean("/0003/冰雨.mp4",R.mipmap.violation,"冰雨"));
+        videoList.add(new VideoBean("/0003/进阶.mlv",R.mipmap.violation,"进阶"));
+        videoList.add(new VideoBean("/0003/paomo.mp4",R.mipmap.violation,"泡沫"));
+        videoList.add(new VideoBean("/0003/冰雨.mp4",R.mipmap.violation,"冰雨"));
+        videoList.add(new VideoBean("/0003/进阶.mlv",R.mipmap.violation,"进阶"));
+
+
         mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                MyLog.showe("checkedId==>" + checkedId + "  CheckedRadioButtonId==>" + group.getCheckedRadioButtonId());
-//                if (checkedId == R.id.rb2) {
-//                    Intent intent = new Intent(getActivity(), VideoViewActivity.class);
-//                    startActivity(intent);
-//                }
+                MyLog.showe("checkedId==>" + checkedId + "  CheckedRadioButtonId==>" + group.getCheckedRadioButtonId());
+                if (checkedId == R.id.rb1) {
+
+
+                    Intent intent = new Intent(getActivity(), VideoViewActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         return view;
@@ -96,7 +104,6 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
         mRb1 = (RadioButton) view.findViewById(R.id.rb1);
         mRb2 = (RadioButton) view.findViewById(R.id.rb2);
         mRg = (RadioGroup) view.findViewById(R.id.rg);
-        mRcv = (RecyclerView) view.findViewById(R.id.rcv);
         mBtn1 = (Button) view.findViewById(R.id.btn1);
         mBtn1.setOnClickListener(this);
         mBtn2 = (Button) view.findViewById(R.id.btn2);
@@ -111,6 +118,7 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
         mBtn6.setOnClickListener(this);
         mBtn7 = (Button) view.findViewById(R.id.btn7);
         mBtn7.setOnClickListener(this);
+        mGridview = (GridView) view.findViewById(R.id.gridview);
     }
 
     @Override
@@ -131,17 +139,17 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
                 File externalFilesDir = getActivity().getExternalFilesDir(null);
                 File externalCacheDir = getActivity().getExternalCacheDir();
                 File externalStorageDirectory = Environment.getExternalStorageDirectory();
-                MyLog.showe("filesDir==>"+filesDir+"  filesDir.path==>"+filesDir.getPath());
-                MyLog.showe("externalFilesDir==>"+externalFilesDir+"  externalFilesDir.path==>"+externalFilesDir.getPath());
-                MyLog.showe("externalCacheDir==>"+externalCacheDir+"  externalCacheDir.path==>"+externalCacheDir.getPath());
-                MyLog.showe("externalStorageDirectory==>"+externalStorageDirectory+"  externalStorageDirectory.path==>"+externalStorageDirectory.getPath());
+                MyLog.showe("filesDir==>" + filesDir + "  filesDir.path==>" + filesDir.getPath());
+                MyLog.showe("externalFilesDir==>" + externalFilesDir + "  externalFilesDir.path==>" + externalFilesDir.getPath());
+                MyLog.showe("externalCacheDir==>" + externalCacheDir + "  externalCacheDir.path==>" + externalCacheDir.getPath());
+                MyLog.showe("externalStorageDirectory==>" + externalStorageDirectory + "  externalStorageDirectory.path==>" + externalStorageDirectory.getPath());
                 break;
             case R.id.btn4:
-                if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                     // SD卡可用
                     MyLog.showe("sd可用");
                 } else {
-                    Toast.makeText(getActivity(),"SD卡不可用，请检查SD卡",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "SD卡不可用，请检查SD卡", Toast.LENGTH_LONG).show();
                 }
 
                 break;

@@ -20,12 +20,13 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 
     public OrmDBHelper(Context context) {
         super(context, "ormdb", null, 1);
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
-            TableUtils.clearTable(connectionSource, SenseBean.class);
+            TableUtils.createTableIfNotExists(connectionSource, SenseBean.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,7 +34,12 @@ public class OrmDBHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
-
+        try {
+            TableUtils.dropTable(connectionSource,SenseBean.class,true);
+            onCreate(sqLiteDatabase,connectionSource);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static synchronized OrmDBHelper gethelp(Context context) {
