@@ -48,9 +48,14 @@
         <activity android:name=".activity.BillManageActivity" />
         <activity
             android:name=".activity.MyVideoActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.VideoViewActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.QrActivity"
             android:screenOrientation="landscape"></activity>
-        <activity android:name=".activity.VideoViewActivity"
-            android:screenOrientation="landscape"></activity>
+        <activity android:name=".activity.ToQrActivity"></activity>
     </application>
 
 </manifest>

@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.mrzhang.newsmarttraffic.adapter.MenuAdapter;
 import com.example.mrzhang.newsmarttraffic.R;
+import com.example.mrzhang.newsmarttraffic.adapter.MenuAdapter;
 import com.example.mrzhang.newsmarttraffic.bean.MenuBean;
 import com.example.mrzhang.newsmarttraffic.fragment.AccountManageFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.BaseFragment;
@@ -26,13 +26,13 @@ import com.example.mrzhang.newsmarttraffic.fragment.DataAnalysisFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.InnovativeFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.LifeAssistantFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.PersonalCenterFragment;
+import com.example.mrzhang.newsmarttraffic.fragment.QrFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.RealTimeShowFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.RoadConditionFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.TrafficLightManageFragment;
 import com.example.mrzhang.newsmarttraffic.fragment.ViolationQueryFragment;
 import com.example.mrzhang.newsmarttraffic.utils.Constant;
 import com.example.mrzhang.newsmarttraffic.utils.MyLog;
-import com.example.mrzhang.newsmarttraffic.utils.MyToast;
 import com.example.mrzhang.newsmarttraffic.utils.SpUtil;
 
 import java.util.ArrayList;
@@ -67,6 +67,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private InnovativeFragment innovativeFragment;
     private FragmentManager supportFragmentManager;
     private RealTimeShowFragment realTimeShowFragment;
+    private QrFragment qrFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +98,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void initData() {
         mTitleLeftIv.setBackgroundResource(R.mipmap.ic_menu);
         mLeftRcv.setLayoutManager(new LinearLayoutManager(this));
-        mLeftRcv.addItemDecoration(new DividerItemDecoration(this,LinearLayoutManager.VERTICAL));
+        mLeftRcv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         List<MenuBean> mDataList = new ArrayList<MenuBean>();
         mDataList.add(new MenuBean(R.mipmap.menu_star, "我的账户"));
         mDataList.add(new MenuBean(R.mipmap.menu_book, "公交查询"));
-        if(!SpUtil.getS(this,Constant.SP_USERROLE).equals("nor_user")) {
+        if (!SpUtil.getS(this, Constant.SP_USERROLE).equals("nor_user")) {
             mDataList.add(new MenuBean(R.mipmap.menu_slideshow, "红绿灯管理"));
         }
         mDataList.add(new MenuBean(R.mipmap.menu_target, "车辆违章"));
+        mDataList.add(new MenuBean(R.mipmap.menu_target, "二维码支付"));
         mDataList.add(new MenuBean(R.mipmap.menu_target, "实时显示"));
         mDataList.add(new MenuBean(R.mipmap.menu_download, "道路状况"));
         mDataList.add(new MenuBean(R.mipmap.menu_star, "生活助手"));
@@ -119,6 +121,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         busInquiryFragment = new BusInquiryFragment();
         trafficLightManageFragment = new TrafficLightManageFragment();
         violationQueryFragment = new ViolationQueryFragment();
+        qrFragment = new QrFragment();
         realTimeShowFragment = new RealTimeShowFragment();
         roadConditionFragment = new RoadConditionFragment();
         lifeAssistantFragment = new LifeAssistantFragment();
@@ -138,7 +141,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         menuAdapter.setMenuClickListen(new MenuAdapter.MenuClickListen() {
             @Override
-            public void Click(int postion,String title) {
+            public void Click(int postion, String title) {
                 MyLog.showe("zzz" + postion);
                 mTitleTv.setText(title);
                 mDrawLayout.closeDrawer(mLlLeftHome);
@@ -155,6 +158,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         break;
                     case "车辆违章"://车辆违章
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, violationQueryFragment).commit();
+                        break;
+                    case "二维码支付"://二维码支付
+                        supportFragmentManager.beginTransaction().replace(R.id.fg_rl, qrFragment).commit();
                         break;
                     case "实时显示"://实时显示
                         supportFragmentManager.beginTransaction().replace(R.id.fg_rl, realTimeShowFragment).commit();
@@ -179,7 +185,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         startActivity(intent);
                         break;
                     case "退出"://退出
-                        SpUtil.putB(MainActivity.this, Constant.SP_ISSELFLOGIN,false);
+                        SpUtil.putB(MainActivity.this, Constant.SP_ISSELFLOGIN, false);
                         Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent1);
                         finish();
@@ -200,7 +206,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTitleRightTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,BillManageActivity.class);
+                Intent intent = new Intent(MainActivity.this, BillManageActivity.class);
                 startActivity(intent);
             }
         });
