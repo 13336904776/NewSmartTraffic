@@ -94,8 +94,16 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
                                     senseBean.setCurrentTime(timeMillis + "");
                                     senseBean.setMs(format);
                                     try {
-//                                        senseDao.create(senseBean);
-                                        senseDao.createIfNotExists(senseBean);
+                                        List<SenseBean> senseBeans = senseDao.queryForAll();
+                                        if (senseBeans.size() >= 20) {
+                                            for (int i = 0; i <= senseBeans.size() - 20; i++) {
+                                                senseDao.delete(senseBeans.get(i));
+                                            }
+//                                          senseDao.create(senseBean);
+                                            senseDao.createIfNotExists(senseBean);
+                                        } else {
+                                            senseDao.createIfNotExists(senseBean);
+                                        }
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
@@ -107,8 +115,6 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
                                     EventBus.getDefault().post(new MessageEvent("co2", format, senseBean.getCo2()));
                                     EventBus.getDefault().post(new MessageEvent("lightIntensity", format, senseBean.getLightIntensity()));
                                     EventBus.getDefault().post(new MessageEvent("humidity", format, senseBean.getHumidity()));
-
-
 
                                 } else {
                                     Toast.makeText(getActivity(), senseBean.getERRMSG(), Toast.LENGTH_SHORT).show();
