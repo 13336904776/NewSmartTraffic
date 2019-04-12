@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.activity.MyVideoActivity;
+import com.example.mrzhang.newsmarttraffic.activity.ScaleImgActivity;
 import com.example.mrzhang.newsmarttraffic.bean.VideoBean;
 import com.example.mrzhang.newsmarttraffic.utils.MyLog;
 
@@ -73,6 +73,7 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
     private List<VideoBean> mLeftVideoList;
     private HashMap<String, Object> hashMap;
     private List<Map<String, Object>> mleftdata;
+    private List<Map<String, Object>> mRightDataMap;
 
 
     @Nullable
@@ -80,7 +81,6 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_violation_query, container, false);
         initView(view);
-
 
         mLeftVideoList = new ArrayList<VideoBean>();
         mLeftVideoList.add(new VideoBean("/0003/paomo.mp4", R.mipmap.violation, "泡沫"));
@@ -90,37 +90,60 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
         mLeftVideoList.add(new VideoBean("/0003/冰雨.mp4", R.mipmap.violation, "冰雨"));
         mLeftVideoList.add(new VideoBean("/0003/进阶.mlv", R.mipmap.violation, "进阶"));
 
+        int[] rightData = {R.mipmap.one,R.mipmap.two,R.mipmap.three,R.mipmap.four,R.mipmap.one};
+        mRightDataMap = new ArrayList<Map<String,Object>>();
+        for (int i = 0; i < rightData.length; i++) {
+            HashMap<String, Object> HashMap = new HashMap<>();
+            HashMap.put("iv", rightData[i]);
+            mRightDataMap.add(HashMap);
+        }
+
         mleftdata = getleftData();
 
         mRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 MyLog.showe("checkedId==>" + checkedId + "  CheckedRadioButtonId==>" + group.getCheckedRadioButtonId());
-                if (checkedId == R.id.rb1) {
-
-                    SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(), mleftdata, R.layout.item_violation_left, new String[]{"img", "tv"}, new int[]{R.id.img, R.id.tv});
-                    mGridview.setAdapter(simpleAdapter);
-                    mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            //获得文件的路径
-                            Map<String, Object> map = mleftdata.get(position);
-                            String path = (String) map.get("path");
-                            String videopath = Environment.getExternalStorageDirectory().getPath() + path;
-                            //判断文件是否存在
-                            File file = new File(videopath);
-                            if (!file.exists()) {//不存在
-                                Toast.makeText(getActivity(), "视频文件路径错误", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Intent intent = new Intent(getActivity(), MyVideoActivity.class);
-                                intent.putExtra("videopath", videopath);
+                switch (checkedId) {
+                    case R.id.rb1:
+                        SimpleAdapter leftAdapter = new SimpleAdapter(getActivity(), mleftdata, R.layout.item_violation_left, new String[]{"img", "tv"}, new int[]{R.id.img, R.id.tv});
+                        mGridview.setAdapter(leftAdapter);
+                        mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                //获得文件的路径
+                                Map<String, Object> map = mleftdata.get(position);
+                                String path = (String) map.get("path");
+                                String videopath = Environment.getExternalStorageDirectory().getPath() + path;
+                                //判断文件是否存在
+                                File file = new File(videopath);
+                                if (!file.exists()) {//不存在
+                                    Toast.makeText(getActivity(), "视频文件路径错误", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Intent intent = new Intent(getActivity(), MyVideoActivity.class);
+                                    intent.putExtra("videopath", videopath);
+                                    startActivity(intent);
+                                }
+                            }
+                        });
+                        break;
+                    case R.id.rb2:
+                        SimpleAdapter rightAdapter = new SimpleAdapter(getActivity(), mRightDataMap, R.layout.item_violation_right, new String[]{"iv"}, new int[]{R.id.img});
+                        mGridview.setAdapter(rightAdapter);
+                        mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Map<String, Object> stringObjectMap = mRightDataMap.get(position);
+                                int ivId = (int) stringObjectMap.get("iv");
+                                Intent intent = new Intent(getActivity(), ScaleImgActivity.class);
+                                intent.putExtra("imgpath", ivId);
                                 startActivity(intent);
                             }
-                        }
-                    });
-                    Log.e("zz", "zzzzz");
+                        });
 
+                        break;
                 }
+
             }
         });
         mRb1.setChecked(true);
@@ -202,10 +225,13 @@ public class ViolationQueryFragment extends BaseFragment implements View.OnClick
                 } else {
                     Toast.makeText(getActivity(), "SD卡不可用，请检查SD卡", Toast.LENGTH_LONG).show();
                 }
+
                 break;
 
         }
     }
+
+
 
 
 }

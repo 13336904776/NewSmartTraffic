@@ -1,6 +1,9 @@
 package com.example.mrzhang.newsmarttraffic.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +32,7 @@ import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment3;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment4;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment5;
 import com.example.mrzhang.newsmarttraffic.fragment.realtime.Fragment6;
+import com.example.mrzhang.newsmarttraffic.utils.MyLog;
 import com.google.gson.Gson;
 import com.j256.ormlite.dao.Dao;
 
@@ -54,12 +58,22 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
     private TextView mTv6;
     private LinearLayout mLlDit;
     private Dao<SenseBean, Integer> senseDao;
+    private Timer timer;
+    private Handler handler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_real_time_show, container, false);
         initView(view);
+        MyLog.showe("RealTimeShowFragment=>onCreateView");
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+            }
+        };
         initViewPage();
 
         OrmDBHelper ormHelper = OrmDBHelper.gethelp(getActivity());
@@ -74,7 +88,8 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void getData() throws SQLException {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 JSONObject object = new JSONObject();
@@ -107,6 +122,7 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
+
 
                                     int temperature = senseBean.getTemperature();
                                     //向fragment1-6发送数据，fragment1-6收到数据后更新
@@ -225,5 +241,72 @@ public class RealTimeShowFragment extends BaseFragment implements View.OnClickLi
                 mVp.setCurrentItem(5);
                 break;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        MyLog.showe("RealTimeShowFragment=>onAttach");
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MyLog.showe("RealTimeShowFragment=>onCreate");
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MyLog.showe("RealTimeShowFragment=>onViewCreated");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MyLog.showe("RealTimeShowFragment=>onActivityCreated");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        MyLog.showe("RealTimeShowFragment=>onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MyLog.showe("RealTimeShowFragment=>onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MyLog.showe("RealTimeShowFragment=>onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MyLog.showe("RealTimeShowFragment=>onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
+        MyLog.showe("RealTimeShowFragment=>onDestroy");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MyLog.showe("RealTimeShowFragment=>onDestroyView");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        MyLog.showe("RealTimeShowFragment=>onDetach");
     }
 }

@@ -75,6 +75,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         initView();
         initListener();
+        MyLog.showe("MainActivity=>onCreate");
         initData();
     }
 
@@ -212,10 +213,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
-    private void changeFragment(int position) {
-
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -226,5 +223,41 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 mDrawLayout.openDrawer(mLlLeftHome);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyLog.showe("MainActivity=>onDestroy");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyLog.showe("MainActivity=>onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyLog.showe("MainActivity=>onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MyLog.showe("MainActivity=>onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyLog.showe("MainActivity=>onStop");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MyLog.showe("MainActivity=>onRestart");
     }
 }

@@ -21,6 +21,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.WelcomeActivity"
@@ -54,8 +55,11 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.QrActivity"
-            android:screenOrientation="landscape"></activity>
-        <activity android:name=".activity.ToQrActivity"></activity>
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.ToQrActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.ScaleImgActivity"
+            android:screenOrientation="landscape" ></activity>
     </application>
 
 </manifest>
