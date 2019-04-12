@@ -76,7 +76,7 @@ public class Fragment1 extends RealTimeBaseFragment {
 //        xAxis.setDrawLabels(true);
         //setSpaceBetweenLabels(int characters) : 设置标签字符间的空隙，默认characters间隔是4
 //        xAxis.setSpaceBetweenLabels(1);
-        
+
 
         //得到左侧的轴
         YAxis axisLeft = mChart.getAxisLeft();

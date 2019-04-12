@@ -1,13 +1,12 @@
 package com.example.mrzhang.newsmarttraffic.fragment;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +19,18 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.mrzhang.newsmarttraffic.BaseUrl;
 import com.example.mrzhang.newsmarttraffic.R;
 import com.example.mrzhang.newsmarttraffic.application.MyApp;
+import com.example.mrzhang.newsmarttraffic.bean.GetCarPeccancyBean;
 import com.example.mrzhang.newsmarttraffic.db.Mydb;
 import com.example.mrzhang.newsmarttraffic.utils.Constant;
+import com.example.mrzhang.newsmarttraffic.utils.GetURl;
 import com.example.mrzhang.newsmarttraffic.utils.MyToast;
 import com.example.mrzhang.newsmarttraffic.utils.SpUtil;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +62,7 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
     private String userName;
     private AlertDialog.Builder mDialog;
     private AlertDialog alertDialog;
+    private Button button;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +93,8 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
         mBtnQuery.setOnClickListener(this);
         mBtnRecharge = (Button) view.findViewById(R.id.btn_recharge);
         mBtnRecharge.setOnClickListener(this);
+        button = (Button) view.findViewById(R.id.button);
+        button.setOnClickListener(this);
     }
 
     @Override
@@ -101,6 +108,32 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
                 break;
             case R.id.btn_recharge:
                 setCarBalance();
+                break;
+            case R.id.button:
+                RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                JSONObject object = new JSONObject();
+                SharedPreferences setting = getActivity().getSharedPreferences("setting", 0);
+                String userName = setting.getString(Constant.SP_USERNNME, "");
+                try {
+                    object.put("UserName",userName);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JsonRequest jsonRequest = new JsonObjectRequest(BaseUrl.ALLURL + "get_all_car_peccancy", object,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject jsonObject) {
+                                GetCarPeccancyBean carPeccancyBean = new Gson().fromJson(jsonObject.toString(), GetCarPeccancyBean.class);
+                                String result = carPeccancyBean.getRESULT();
+                                if("S".equals(result)){
+                                    Log.e("zz",carPeccancyBean.toString());
+                                }else {
+                                    
+                                }
+                            }
+                        },null);
+                requestQueue.add(jsonRequest);
                 break;
         }
     }
@@ -123,19 +156,19 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
                     public void onResponse(JSONObject jsonObject) {
                         alertDialog.dismiss();
                         String result = jsonObject.optString("RESULT");
-                        if("S".equals(result)){
+                        if ("S".equals(result)) {
                             int balance = jsonObject.optInt("Balance");
-                            mTvAccountBalance.setText(balance+"元");
-                        }else {
+                            mTvAccountBalance.setText(balance + "元");
+                        } else {
                             String errmsg = jsonObject.optString("ERRMSG");
-                            MyToast.show(getContext(),errmsg);
+                            MyToast.show(getContext(), errmsg);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 alertDialog.dismiss();
-                MyToast.show(getContext(),volleyError.getMessage());
+                MyToast.show(getContext(), volleyError.getMessage());
             }
         });
         requestQueue.add(jsonObjectRequest);
@@ -145,13 +178,13 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
 
         String mRechargeAmount = mEdtRechargeAmount.getText().toString().trim();
         int nRechrgeAmount = 0;
-        if(TextUtils.isEmpty(mRechargeAmount)){
-            MyToast.show(getContext(),"请输入充值金额");
+        if (TextUtils.isEmpty(mRechargeAmount)) {
+            MyToast.show(getContext(), "请输入充值金额");
             return;
-        }else {
+        } else {
             nRechrgeAmount = Integer.parseInt(mRechargeAmount);
-            if(nRechrgeAmount < 1 || nRechrgeAmount > 999){
-                MyToast.show(getContext(),"请输入1-999元的充值金额");
+            if (nRechrgeAmount < 1 || nRechrgeAmount > 999) {
+                MyToast.show(getContext(), "请输入1-999元的充值金额");
                 return;
             }
         }
@@ -173,30 +206,30 @@ public class AccountManageFragment extends BaseFragment implements View.OnClickL
                     public void onResponse(JSONObject jsonObject) {
                         alertDialog.dismiss();
                         String result = jsonObject.optString("RESULT");
-                        if("S".equals(result)){
-                            MyToast.show(getContext(),"充值成功");
+                        if ("S".equals(result)) {
+                            MyToast.show(getContext(), "充值成功");
                             mEdtRechargeAmount.setText("");
                             getCarBalance();
                             //存到数据库中
                             Mydb mydb = new Mydb(getContext());
                             SQLiteDatabase database = mydb.getWritableDatabase();
                             ContentValues contentValues = new ContentValues();
-                            contentValues.put("operator",userName);
-                            contentValues.put("carId",nCarId);
+                            contentValues.put("operator", userName);
+                            contentValues.put("carId", nCarId);
                             contentValues.put("rechargeAmount", finalNRechrgeAmount);
                             long currentTimeMillis = System.currentTimeMillis();
-                            contentValues.put("date",currentTimeMillis);
-                            database.insert("recharge",null,contentValues);
-                        }else {
+                            contentValues.put("date", currentTimeMillis);
+                            database.insert("recharge", null, contentValues);
+                        } else {
                             String errmsg = jsonObject.optString("ERRMSG");
-                            MyToast.show(getContext(),errmsg);
+                            MyToast.show(getContext(), errmsg);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 alertDialog.dismiss();
-                MyToast.show(getContext(),volleyError.getMessage());
+                MyToast.show(getContext(), volleyError.getMessage());
             }
         });
         mDialog.setMessage("充值中");
